@@ -10,7 +10,7 @@ You will need to create and register an application with SKY API for the purpose
 Follow the instructions at https://apidocs.sky.blackbaud.com/docs/getting-started/ to create a developer account and acquire your **api_subscription key**.
 
 ### Creating an app
-Follow the instructions at https://apidocs.sky.blackbaud.com/docs/createapp/ to register and activate your app. Registering your app will generate a **client_id** and **client_secret** for the app. Ensure that at least one of the Redirect URLs for the app you create is set to https://oauth.powerbi.com/views/oauthredirect.html
+Follow the instructions at https://apidocs.sky.blackbaud.com/docs/createapp/ to register and activate your app. Registering your app will generate a **client_id** and **client_secret** for the app. Ensure that at least one of the Redirect URLs for the app you create is set to http://localhost/5000
 
 ### Configuring PSALM
 1. Place the SkyApi folder in your PowerShell modules folder, usually located here: C:\Users\your_username\Documents\WindowsPowerShell\Modules
