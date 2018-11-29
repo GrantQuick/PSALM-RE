@@ -86,7 +86,7 @@ Function Patch-Education
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        Function Patch-Education
+        Function Update-Education
         {
             [CmdletBinding()]
             param($uid, $updateProperties)
@@ -119,7 +119,7 @@ Function Patch-Education
         $ID | ForEach-Object {
             $i++
             Write-Host "Patching Education ID $_ (record $i of $($ID.Length))"
-            Patch-Education $_ $parmsJson | Out-Null
+            Update-Education $_ $parmsJson | Out-Null
         }
     }
     End{}
