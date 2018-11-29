@@ -38,7 +38,7 @@ Patch-Education -ID '102034','76688' -Department 'Aberystwyth Business School' -
 ```
 
 ## Known Issues
-No encryption/security has yet been immplemented on the Access Keys file or Configuration file.
+The configuration file containing the api_subscription_key, client_id and client_secret is not secured and is a plain text file. It is advisable not to keep this file in an insecure location.
 
 ## Authors
 * **Grant Quick** - *Initial work* - [GrantQuick](https://github.com/GrantQuick)
