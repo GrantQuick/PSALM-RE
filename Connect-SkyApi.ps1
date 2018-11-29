@@ -35,7 +35,10 @@ Function Connect-SkyApi {
         $Authorization = Get-RefreshToken 'refresh_token' $client_id $redirect_uri $client_secret $authorization.refresh_token
     
         # Save credentials to file
-        $Authorization | Select-Object access_token, refresh_token | ConvertTo-Json | Out-File -FilePath $fileLocation -Force
+        $Authorization | Select-Object access_token, refresh_token | ConvertTo-Json `
+            | ConvertTo-SecureString -AsPlainText -Force `
+            | ConvertFrom-SecureString `
+            | Out-File -FilePath $fileLocation -Force
         
     }
     

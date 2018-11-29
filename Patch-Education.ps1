@@ -81,7 +81,10 @@ Function Patch-Education
         $config = Get-Content ".\Config.json" | ConvertFrom-Json
         $api_subscription_key = ($config | Select-Object -Property "api_subscription_key").api_subscription_key
         $key_dir = ($config | Select-Object -Property "key_dir").key_dir
-        $myAuth = Get-Content $key_dir | ConvertFrom-Json
+        
+        # Grab the keys
+        $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
+        $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
         Function Patch-Education
         {
