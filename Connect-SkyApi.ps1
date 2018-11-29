@@ -40,7 +40,7 @@ Function Connect-SkyApi {
     }
     
     # If key file does not exist
-    if (-not (Test-Path $key_dir))
+    if ((-not (Test-Path $key_dir)) -or ($force))
     {
         Get-NewToken $key_dir
     }
