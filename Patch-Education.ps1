@@ -96,14 +96,13 @@ Function Patch-Education
             Invoke-RestMethod   -Method Patch `
                                 -ContentType application/json `
                                 -Headers @{
-                                        # 'Authorization' = ("Bearer "+ $Authorization.access_token)
                                         'Authorization' = ("Bearer "+ $($myAuth.access_token))
                                         'bb-api-subscription-key' = ($api_subscription_key)} `
                                 -Uri $fullUri `
                                 -Body $updateProperties
             $apiCallResult
         }
-   
+        
         # Create JSON for supplied parameters
         $parms = $PSBoundParameters
         $parms.Remove('ID') | Out-Null
@@ -113,8 +112,11 @@ Function Patch-Education
     
     Process{ 
         # Update multiple IDs with the same data
+        $i = 0
         $ID | ForEach-Object {
-            Patch-Education $_ $parmsJson
+            $i++
+            Write-Host "Patching Education ID $_ (record $i of $($ID.Length))"
+            Patch-Education $_ $parmsJson | Out-Null
         }
     }
     End{}
