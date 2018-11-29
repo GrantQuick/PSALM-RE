@@ -53,6 +53,11 @@ Function Connect-SkyApi {
     $minTimespan = new-timespan -minutes 50
     $maxTimespan = new-timespan -minutes 59
     
+    # If token has expired
+    if (((get-date) - $lastWrite) -gt $maxTimespan) {
+        Get-NewToken $key_dir
+    }
+
     # Token is older than 50 minutes and but younger than 59
     if ((((get-date) - $lastWrite) -gt $minTimespan) -and (((get-date) - $lastWrite) -lt $maxTimespan))  {
         Write-Host "older"
@@ -60,11 +65,7 @@ Function Connect-SkyApi {
         $Authorization = Get-RefreshToken 'refresh_token' $client_id $redirect_uri $client_secret $($myAuth.refresh_token)
         $Authorization | Select-Object access_token, refresh_token | ConvertTo-Json | Out-File -FilePath $key_dir -Force
     } 
-    
-    # If token has expired
-    if (((get-date) - $lastWrite) -gt $maxTimespan) {
-        Get-NewToken $key_dir
-    }
+        
 }
 
 

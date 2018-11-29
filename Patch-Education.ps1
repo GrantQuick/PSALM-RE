@@ -13,67 +13,87 @@ Function Patch-Education
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Campus,
+        ][string]$campus,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Class_Of,
+        ][string]$class_of,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Class_Of_Degree,
+        ][string]$class_of_degree,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Degree,
+        ][string]$degree,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Department,
+        ][string]$department,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Faculty,
+        ][string]$faculty,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Known_Name,
+        ][double]$gpa,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Registration_Number,
+        ][string]$known_name,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$School,
+        ][string[]]$majors,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Social_Organization,
+        ][string[]]$minors,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Status,
+        ][boolean]$primary,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Subject_Of_Study,
+        ][string]$registration_number,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$Type
+        ][string]$school,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][string]$social_organization,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][string]$status,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][string]$subject_of_study,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][string]$type
     )
     Begin{ 
         
@@ -110,7 +130,6 @@ Function Patch-Education
         $parms = $PSBoundParameters
         $parms.Remove('ID') | Out-Null
         $parmsJson = $parms | ConvertTo-Json
-        
     }
     
     Process{ 
