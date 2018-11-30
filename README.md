@@ -34,7 +34,7 @@ Connect-SkyApi
 * To update an existing education record, you will need the unique system ID of the record(s) you wish to change. Using PSALM, you can update one education record, or multiple education records at once if all records require the same change.
 * For example, in order to update the Department and Campus for two education records, you can either pipe a group of IDs to the cmdlet or use:
 ```
-Patch-Education -ID '102034','76688' -Department 'Aberystwyth Business School' -Campus 'Awesome Campus'
+Patch-Education -ID 102034,76688 -Department 'Aberystwyth Business School' -Campus 'Awesome Campus'
 ```
 
 ## Known Issues
