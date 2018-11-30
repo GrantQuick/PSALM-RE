@@ -8,7 +8,7 @@ Function Patch-Education
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string[]]$ID,
+        ][int[]]$ID,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
