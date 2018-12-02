@@ -72,3 +72,58 @@ Function Show-OAuthWindow
 
     $output
 }
+
+Function Update-SkyApiDateParms
+{
+    # Refactor the fuzzy date fields
+    [CmdletBinding()]
+    param($dateHash, $dateField)
+    $datePart = @{}
+
+    $dayPart = $dateField + '_d'
+    $monthPart = $dateField + '_m'
+    $yearPart = $dateField + '_y'
+
+    if ($dateHash.ContainsKey($dayPart))
+    {
+        $datePart.Add('d',$dateHash.$dayPart)
+        $dateHash.Remove($dayPart) | Out-Null
+    }
+
+    if ($dateHash.ContainsKey($monthPart))
+    {
+        $datePart.Add('m',$dateHash.$monthPart)
+        $dateHash.Remove($monthPart) | Out-Null
+    }
+
+    if ($dateHash.ContainsKey($yearPart))
+    {
+        $datePart.Add('y',$dateHash.$yearPart)
+        $dateHash.Remove($yearPart) | Out-Null
+    }
+
+    if ($datePart.Count -gt 0)
+    {
+        $dateHash.Add($dateField,$datePart)
+    }
+
+    $dateHash
+}
+
+Function Update-SkyApiEntity
+{
+    [CmdletBinding()]
+    param($uid, $updateProperties, $url, $api_key, $authorisation)
+
+    $fullUri = $url + $uid
+
+    $apiCallResult =
+    Invoke-RestMethod   -Method Patch `
+                        -ContentType application/json `
+                        -Headers @{
+                                'Authorization' = ("Bearer "+ $($authorisation.access_token))
+                                'bb-api-subscription-key' = ($api_key)} `
+                        -Uri $fullUri `
+                        -Body $updateProperties
+    $apiCallResult
+}

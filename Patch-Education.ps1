@@ -4,7 +4,7 @@ Function Patch-Education
     param(
         [parameter(
             #Position=0,
-            Mandatory=$true, 
+            Mandatory=$true,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
@@ -24,6 +24,51 @@ Function Patch-Education
             ValueFromPipelineByPropertyName=$true
             )
         ][string]$class_of_degree,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$date_entered_d,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$date_entered_m,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$date_entered_y,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$date_graduated_d,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$date_graduated_m,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$date_graduated_y,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$date_left_d,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$date_left_m,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$date_left_y,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
@@ -95,50 +140,39 @@ Function Patch-Education
             )
         ][string]$type
     )
-    Begin{ 
-        
+    Begin{
+
         # Get necessary items from config file
         $config = Get-Content ".\Config.json" | ConvertFrom-Json
         $api_subscription_key = ($config | Select-Object -Property "api_subscription_key").api_subscription_key
         $key_dir = ($config | Select-Object -Property "key_dir").key_dir
-        
+
         # Grab the keys
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        Function Update-Education
-        {
-            [CmdletBinding()]
-            param($uid, $updateProperties)
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/educations/'
 
-            $startUrl = 'https://api.sky.blackbaud.com/constituent/v1/educations/'
-
-            $fullUri = $startUrl + $uid
-
-            $apiCallResult =
-            Invoke-RestMethod   -Method Patch `
-                                -ContentType application/json `
-                                -Headers @{
-                                        'Authorization' = ("Bearer "+ $($myAuth.access_token))
-                                        'bb-api-subscription-key' = ($api_subscription_key)} `
-                                -Uri $fullUri `
-                                -Body $updateProperties
-            $apiCallResult
-        }
-        
         # Create JSON for supplied parameters
         $parms = $PSBoundParameters
         $parms.Remove('ID') | Out-Null
+
+        # Refactor any fuzzy date fields
+        $parms = Update-SkyApiDateParms $parms 'date_entered'
+        $parms = Update-SkyApiDateParms $parms 'date_graduated'
+        $parms = Update-SkyApiDateParms $parms 'date_left'
+
+        # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
     }
-    
-    Process{ 
-        # Update multiple IDs with the same data
+
+    Process{
+        # Update one or more IDs with the same data
         $i = 0
         $ID | ForEach-Object {
             $i++
             Write-Host "Patching Education ID $_ (record $i of $($ID.Length))"
-            Update-Education $_ $parmsJson | Out-Null
+            Update-SkyApiEntity $_ $parmsJson $endpoint $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

@@ -1,7 +1,7 @@
 Function Connect-SkyApi {
     [CmdletBinding()]
     param([Switch]$force)
-    
+
     Import-Module 'SkyApi' -Force
 
     # Database Parameters
@@ -25,47 +25,47 @@ Function Connect-SkyApi {
     {
         [CmdletBinding()]
         param($fileLocation)
-    
+
         $authOutput = Show-OAuthWindow -URL $strUri
-    
+
         # Get auth token
         $Authorization = Get-SkyApiAuthToken 'authorization_code' $client_id $redirect_uri $client_secret $authOutput["code"]
-        
+
         # Swap token for a refresh token
         $Authorization = Get-RefreshToken 'refresh_token' $client_id $redirect_uri $client_secret $authorization.refresh_token
-    
+
         # Save credentials to file
         $Authorization | Select-Object access_token, refresh_token | ConvertTo-Json `
             | ConvertTo-SecureString -AsPlainText -Force `
             | ConvertFrom-SecureString `
             | Out-File -FilePath $fileLocation -Force
-        
+
     }
-    
+
     # If key file does not exist
     if ((-not (Test-Path $key_dir)) -or ($force))
     {
         Get-NewToken $key_dir
     }
-    
+
     # Check if refresh token is nearing expiry, and if so get a new one
     $lastWrite = (get-item $key_dir).LastWriteTime
-    $minTimespan = new-timespan -minutes 50
-    $maxTimespan = new-timespan -minutes 59
-    
+    $minTimespan = new-timespan -days 30
+    $maxTimespan = new-timespan -days 59
+
     # If token has expired
     if (((get-date) - $lastWrite) -gt $maxTimespan) {
         Get-NewToken $key_dir
     }
 
-    # Token is older than 50 minutes and but younger than 59
+    # Token is older than 30 days and but younger than 59
     if ((((get-date) - $lastWrite) -gt $minTimespan) -and (((get-date) - $lastWrite) -lt $maxTimespan))  {
         Write-Host "older"
         $myAuth = Get-Content $key_dir | ConvertFrom-Json
         $Authorization = Get-RefreshToken 'refresh_token' $client_id $redirect_uri $client_secret $($myAuth.refresh_token)
         $Authorization | Select-Object access_token, refresh_token | ConvertTo-Json | Out-File -FilePath $key_dir -Force
-    } 
-        
+    }
+
 }
 
 
