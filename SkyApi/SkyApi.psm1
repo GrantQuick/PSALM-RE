@@ -77,37 +77,37 @@ Function Update-SkyApiDateParms
 {
     # Refactor the fuzzy date fields
     [CmdletBinding()]
-    param($dateHash, $dateField)
+    param($sourceHash, $dateField)
     $datePart = @{}
 
     $dayPart = $dateField + '_d'
     $monthPart = $dateField + '_m'
     $yearPart = $dateField + '_y'
 
-    if ($dateHash.ContainsKey($dayPart))
+    if ($sourceHash.ContainsKey($dayPart))
     {
-        $datePart.Add('d',$dateHash.$dayPart)
-        $dateHash.Remove($dayPart) | Out-Null
+        $datePart.Add('d',$sourceHash.$dayPart)
+        $sourceHash.Remove($dayPart) | Out-Null
     }
 
-    if ($dateHash.ContainsKey($monthPart))
+    if ($sourceHash.ContainsKey($monthPart))
     {
-        $datePart.Add('m',$dateHash.$monthPart)
-        $dateHash.Remove($monthPart) | Out-Null
+        $datePart.Add('m',$sourceHash.$monthPart)
+        $sourceHash.Remove($monthPart) | Out-Null
     }
 
-    if ($dateHash.ContainsKey($yearPart))
+    if ($sourceHash.ContainsKey($yearPart))
     {
-        $datePart.Add('y',$dateHash.$yearPart)
-        $dateHash.Remove($yearPart) | Out-Null
+        $datePart.Add('y',$sourceHash.$yearPart)
+        $sourceHash.Remove($yearPart) | Out-Null
     }
 
     if ($datePart.Count -gt 0)
     {
-        $dateHash.Add($dateField,$datePart)
+        $sourceHash.Add($dateField,$datePart)
     }
 
-    $dateHash
+    $sourceHash
 }
 
 Function Update-SkyApiEntity
@@ -126,4 +126,18 @@ Function Update-SkyApiEntity
                         -Uri $fullUri `
                         -Body $updateProperties
     $apiCallResult
+}
+
+Function Update-DateField
+{
+    # Refactor the fuzzy date fields
+    [CmdletBinding()]
+    param($sourceHash, $dateField)
+    
+    if ($sourceHash.ContainsKey($dateField))
+    {
+        $sourceHash.$dateField = Get-Date $sourceHash.$dateField -Format "s"
+    }
+
+    $sourceHash
 }

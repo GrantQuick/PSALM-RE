@@ -50,15 +50,15 @@ Function Connect-SkyApi {
 
     # Check if refresh token is nearing expiry, and if so get a new one
     $lastWrite = (get-item $key_dir).LastWriteTime
-    $minTimespan = new-timespan -days 30
-    $maxTimespan = new-timespan -days 59
+    $minTimespan = new-timespan -minutes 50
+    $maxTimespan = new-timespan -minutes 59
 
     # If token has expired
     if (((get-date) - $lastWrite) -gt $maxTimespan) {
         Get-NewToken $key_dir
     }
 
-    # Token is older than 30 days and but younger than 59
+    # Token is older than 50 minutes and but younger than 59
     if ((((get-date) - $lastWrite) -gt $minTimespan) -and (((get-date) - $lastWrite) -lt $maxTimespan))  {
         Write-Host "older"
         $myAuth = Get-Content $key_dir | ConvertFrom-Json
