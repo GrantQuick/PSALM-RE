@@ -13,10 +13,13 @@ Follow the instructions at https://apidocs.sky.blackbaud.com/docs/getting-starte
 Follow the instructions at https://apidocs.sky.blackbaud.com/docs/createapp/ to register and activate your app. Registering your app will generate a **client_id** and **client_secret** for the app. Ensure that at least one of the Redirect URLs for the app you create is set to http://localhost/5000
 
 ### Configuring PSALM
-1. Place the SkyApi folder in your PowerShell modules folder, usually located here: C:\Users\your_username\Documents\WindowsPowerShell\Modules
-2. Place the Config.json and other top-level ps1 files in any location.
-3. Edit the Config.json file and complete each field, eg:
+1. Clone/Download the repo
+2. Import the module
+```PowerShell
+Import-Module .\psalm.psm1
 ```
+3. Edit the Config.json file and complete each field, eg:
+```json
 {
   "key_dir":  "C:\\Users\\your_username\\Scripts\\SkyApi\\Key.json",
   "api_subscription_key":  "your api_subscription_key",    
@@ -27,14 +30,14 @@ Follow the instructions at https://apidocs.sky.blackbaud.com/docs/createapp/ to 
 
 ### Using PSALM
 * To connect to the API, in a PowerShell window, run 
-```
+```PowerShell
 Connect-SkyApi
 ```
 * Only a handful of endpoints have been implemented so far.
 * To update an existing education record (for example), you will need the unique system ID of the record(s) you wish to change. Using PSALM, you can update one education record, or multiple education records at once if all records require the same change.
 * For example, in order to update the Department and Campus for two education records, you can either pipe a group of IDs to the cmdlet or use:
-```
-Patch-Education -ID 102034,76688 -Department 'Aberystwyth Business School' -Campus 'Awesome Campus'
+```PowerShell
+Update-Education -ID 102034,76688 -Department 'Aberystwyth Business School' -Campus 'Awesome Campus'
 ```
 
 ## Known Issues
