@@ -14,11 +14,7 @@ Follow the instructions at https://apidocs.sky.blackbaud.com/docs/createapp/ to 
 
 ### Configuring PSALM
 1. Clone/Download the repo
-2. Import the module
-```PowerShell
-Import-Module .\psalm.psm1
-```
-3. Edit the Config.json file and complete each field, eg:
+2. Edit the Config.json file and complete each field, eg:
 ```json
 {
   "key_dir":  "C:\\Users\\your_username\\Scripts\\SkyApi\\Key.json",
@@ -29,13 +25,16 @@ Import-Module .\psalm.psm1
 ```
 
 ### Using PSALM
-* To connect to the API, in a PowerShell window, run 
+1. In a PowerShell window, navigate to the psalm folder
+2. Import the module
+```PowerShell
+Import-Module .\psalm.psm1
+```
+3. To connect to the API, in a PowerShell window, run 
 ```PowerShell
 Connect-SkyApi
 ```
-* Only a handful of endpoints have been implemented so far.
-* To update an existing education record (for example), you will need the unique system ID of the record(s) you wish to change. Using PSALM, you can update one education record, or multiple education records at once if all records require the same change.
-* For example, in order to update the Department and Campus for two education records, you can either pipe a group of IDs to the cmdlet or use:
+4. You can now run any of the cmdlets, eg in order to update the Department and Campus for two education records, you can either pipe a group of IDs to the cmdlet or use:
 ```PowerShell
 Update-Education -ID 102034,76688 -Department 'Aberystwyth Business School' -Campus 'Awesome Campus'
 ```
