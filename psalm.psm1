@@ -145,9 +145,9 @@ Function Update-SkyApiEntity
 Function Get-SkyApiEntity
 {
     [CmdletBinding()]
-    param($uid, $url, $api_key, $authorisation)
+    param($uid, $url, $endUrl, $api_key, $authorisation)
 
-    $fullUri = $url + $uid
+    $fullUri = $url + $uid + $endUrl
 
     $apiCallResult =
     Invoke-RestMethod   -Method Get `

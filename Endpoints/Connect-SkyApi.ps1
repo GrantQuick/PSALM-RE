@@ -59,11 +59,19 @@ Function Connect-SkyApi {
     }
 
     # Token is older than 59 minutes and but younger than 60 days
+    # Refresh token
     if ((((get-date) - $lastWrite) -gt $minTimespan) -and (((get-date) - $lastWrite) -lt $maxTimespan))  {
-        Write-Host "older"
-        $myAuth = Get-Content $key_dir | ConvertFrom-Json
+        
+        $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
+        $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
+
         $Authorization = Get-RefreshToken 'refresh_token' $client_id $redirect_uri $client_secret $($myAuth.refresh_token)
-        $Authorization | Select-Object access_token, refresh_token | ConvertTo-Json | Out-File -FilePath $key_dir -Force
+        
+        # Save credentials to file
+        $Authorization | Select-Object access_token, refresh_token | ConvertTo-Json `
+            | ConvertTo-SecureString -AsPlainText -Force `
+            | ConvertFrom-SecureString `
+            | Out-File -FilePath $key_dir -Force
     }
 
 }
