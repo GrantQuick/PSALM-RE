@@ -34,10 +34,36 @@ Import-Module .\psalm.psm1
 ```PowerShell
 Connect-SkyApi
 ```
-4. You can now run any of the cmdlets, eg in order to update the Department and Campus for two education records, you can either pipe a group of IDs to the cmdlet or use:
+4. On first run, this cmdlet will prompt for your credentials and ask you to authorise PSALM for use with your data, and will download a key file with the authentication codes for later use. On subsequent runnings, the cmdlet will either refresh the authentication codes, or ask you to re-authorise if they have expired. You can force PSALM to aquire new keys by running:
+```PowerShell
+Connect-SkyApi -Force
+```
+5. You can now run any of the cmdlets, eg in order to update the Department and Campus for two education records, you can either pipe a group of IDs to the cmdlet or use:
 ```PowerShell
 Update-Education -ID 102034,76688 -Department 'Aberystwyth Business School' -Campus 'Awesome Campus'
 ```
+6. You can also pipe the results of one cmdlet to another, useful for circumstances where you may have the lookup id (i.e. the RE constituent id) but not the unique system record id. So if you wanted to return the emails for a particular individual and only have the lookup id, you could use the following where 100604 is the lookup id (constituent id in the RE front end):
+```PowerShell
+Get-ConstituentFromLookup -search_text 100604 | Select id | Get-EmailListSingle
+```
+
+## Supported Endpoints
+| PS Cmdlet | Endpoint Implemented |
+| --- | --- |
+| Get-Action | Get Action |
+| Get-ActionListSingle | Get Action list (Single constituent) |
+| Get-AddressListSingle | Get Address list (Single constituent) |
+| Get-Constituent | Get Constituent |
+| Get-ConstituentFromLookup | Get Constituent (Search) |
+| Get-EducationListSingle | Get Education list (Single constituent) |
+| Get-EmailListSingle | Get Email address list (Single constituent) |
+| Get-PhoneListSingle | Get Phone list (Single constituent) |
+| Update-Action | Patch Action |
+| Update-Address | Patch Address |
+| Update-Constituent | Patch Constituent |
+| Update-Education | Patch Education |
+| Update-EmailAddress| Patch EmailAddress |
+| Update-Phone | Patch Phone |
 
 ## Known Issues
 The configuration file containing the api_subscription_key, client_id and client_secret is not secured and is a plain text file. It is advisable not to keep this file in an insecure location.
