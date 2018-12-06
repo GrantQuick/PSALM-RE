@@ -53,14 +53,21 @@ Get-ConstituentFromLookup -search_text 100604 | Select id | Get-EmailListSingle
 | Get-Action | Get Action |
 | Get-ActionListSingle | Get Action list (Single constituent) |
 | Get-AddressListSingle | Get Address list (Single constituent) |
+| Get-AliasListSingle | Get Alias list (Single constituent) |
+| Get-CommunicationPreferenceListSingle | Get Communication preference list (Single constituent) |
 | Get-Constituent | Get Constituent |
+| Get-ConstituentCodeListSingle | Get Constituent code list (Single constituent) |
 | Get-ConstituentFromLookup | Get Constituent (Search) |
+| Get-ConstituentList | Get Constituent list |
 | Get-EducationListSingle | Get Education list (Single constituent) |
 | Get-EmailListSingle | Get Email address list (Single constituent) |
 | Get-PhoneListSingle | Get Phone list (Single constituent) |
 | Update-Action | Patch Action |
 | Update-Address | Patch Address |
+| Update-Alias | Patch Alias |
+| Update-CommunicationPreference | Patch Communication preference |
 | Update-Constituent | Patch Constituent |
+| Update-ConstituentCode | Patch Constituent code |
 | Update-Education | Patch Education |
 | Update-EmailAddress| Patch EmailAddress |
 | Update-Phone | Patch Phone |
