@@ -132,6 +132,7 @@ Function Update-Constituent
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
         $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/'
+        $endUrl = ''
 
         # Create JSON for supplied parameters
         $parms = $PSBoundParameters
@@ -151,7 +152,7 @@ Function Update-Constituent
         $ID | ForEach-Object {
             $i++
             Write-Host "Patching Constituent ID $_ (record $i of $($ID.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $api_subscription_key $myAuth | Out-Null
+            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

@@ -1,4 +1,4 @@
-Function Get-Action
+Function Get-ConstituentCodeListSingle
 {
     [cmdletbinding()]
     param(
@@ -21,15 +21,15 @@ Function Get-Action
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/actions/'
-        $endUrl = ''
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/'
+        $endUrl = '/constituentcodes'
     }
 
     Process{
         # Get data for one or more IDs
         $ID | ForEach-Object {
             $res = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
-            $res
+            $res.value
         }
     }
     End{

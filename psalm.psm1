@@ -115,7 +115,7 @@ Function Convert-SkyApiDateParm
     # Refactor the fuzzy date fields
     [CmdletBinding()]
     param($sourceHash, $dateField)
-    
+
     if ($sourceHash.ContainsKey($dateField))
     {
         $sourceHash.$dateField = Get-Date $sourceHash.$dateField -Format "s"
@@ -127,9 +127,9 @@ Function Convert-SkyApiDateParm
 Function Update-SkyApiEntity
 {
     [CmdletBinding()]
-    param($uid, $updateProperties, $url, $api_key, $authorisation)
+    param($uid, $updateProperties, $url, $endUrl, $api_key, $authorisation)
 
-    $fullUri = $url + $uid
+    $fullUri = $url + $uid + $endUrl
 
     $apiCallResult =
     Invoke-RestMethod   -Method Patch `
@@ -157,6 +157,36 @@ Function Get-SkyApiEntity
                                 'bb-api-subscription-key' = ($api_key)} `
                         -Uri $fullUri
     $apiCallResult
+}
+
+Function Get-PagedApiResults
+{
+    [CmdletBinding()]
+    param($uid, $url, $endUrl, $api_key, $authorisation, $params, $limit)
+
+    $fullUri = $url + $uid + $endUrl
+    $Request = [System.UriBuilder]$fullUri
+    $Request.Query = $params.ToString()
+
+    $allRecords = @()
+
+    # Call to the API
+    do {
+        $apiItems =
+        Invoke-RestMethod   -Method Get `
+                            -ContentType application/json `
+                            -Headers @{
+                                    'Authorization' = ("Bearer "+ $authorisation.access_token)
+                                    'bb-api-subscription-key' = ($api_key)} `
+                            -Uri $($Request.Uri.AbsoluteUri)
+        $allRecords += $apiItems.value
+
+        # write-host $($Request.Uri.AbsoluteUri)
+
+        if ($allRecords.Count -ge $limit) {return $allRecords}
+    } while ([bool]($apiItems.PSobject.Properties.name -match "next_link"))
+
+    $allRecords
 }
 
 

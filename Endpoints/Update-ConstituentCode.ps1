@@ -1,4 +1,4 @@
-Function Update-EmailAddress
+Function Update-ConstituentCode
 {
     [cmdletbinding()]
     param(
@@ -13,27 +13,32 @@ Function Update-EmailAddress
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$address,
+        ][int]$end_d,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][boolean]$do_not_email,
+        ][int]$end_m,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][boolean]$inactive,
+        ][int]$end_y,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][boolean]$primary,
+        ][int]$start_d,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$type
+        ][int]$start_m,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$start_y
     )
     Begin{
 
@@ -46,12 +51,16 @@ Function Update-EmailAddress
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/emailaddresses/'
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituentcodes/'
         $endUrl = ''
 
         # Create JSON for supplied parameters
         $parms = $PSBoundParameters
         $parms.Remove('ID') | Out-Null
+
+        # Refactor any fuzzy date fields
+        $parms = Merge-SkyApiDateParm $parms 'end'
+        $parms = Merge-SkyApiDateParm $parms 'start'
 
         # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
@@ -62,7 +71,7 @@ Function Update-EmailAddress
         $i = 0
         $ID | ForEach-Object {
             $i++
-            Write-Host "Patching Email ID $_ (record $i of $($ID.Length))"
+            Write-Host "Patching Constituent Code ID $_ (record $i of $($ID.Length))"
             Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }

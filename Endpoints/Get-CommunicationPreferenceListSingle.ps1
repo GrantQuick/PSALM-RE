@@ -1,4 +1,4 @@
-Function Get-ConstituentFromLookup
+Function Get-CommunicationPreferenceListSingle
 {
     [cmdletbinding()]
     param(
@@ -8,15 +8,19 @@ Function Get-ConstituentFromLookup
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string[]]$search_text,
+        ][int[]]$constituent_id,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][boolean]$include_inactive = 0
+        ][int]$limit,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$offset
     )
     Begin{
-
         # Get necessary items from config file
         $config = Get-Content ".\Config.json" | ConvertFrom-Json
         $api_subscription_key = ($config | Select-Object -Property "api_subscription_key").api_subscription_key
@@ -26,16 +30,26 @@ Function Get-ConstituentFromLookup
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/search?search_text='
-        $endUrl = '&include_inactive=' + $include_inactive
-        $endUrl = $endUrl + '&search_field=lookup_id'
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/'
+        $endUrl = '/communicationpreferences'
+
+        # Get the supplied parameters
+        $parms = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
+
+        foreach ($par in $PSBoundParameters.GetEnumerator())
+        {
+            $parms.Add($par.Key,$par.Value)
+        }
+
+        $parms.Remove('constituent_id') | Out-Null
+
     }
 
     Process{
         # Get data for one or more IDs
-        $search_text | ForEach-Object {
-            $res = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
-            $res.value
+        $constituent_id | ForEach-Object {
+            $res = Get-PagedApiResults $_ $endpoint $endUrl $api_subscription_key $myAuth $parms $limit
+            $res
         }
     }
     End{

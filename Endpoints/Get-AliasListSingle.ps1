@@ -1,17 +1,26 @@
-Function Get-ActionListSingle
+Function Get-AliasListSingle
 {
     [cmdletbinding()]
     param(
         [parameter(
-            #Position=0,
+            Position=0,
             Mandatory=$true,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int[]]$ID
+        ][int[]]$constituent_id,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$limit,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][int]$offset
     )
     Begin{
-
         # Get necessary items from config file
         $config = Get-Content ".\Config.json" | ConvertFrom-Json
         $api_subscription_key = ($config | Select-Object -Property "api_subscription_key").api_subscription_key
@@ -22,14 +31,25 @@ Function Get-ActionListSingle
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
         $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/'
-        $endUrl = '/actions'
+        $endUrl = '/aliases'
+
+        # Get the supplied parameters
+        $parms = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
+
+        foreach ($par in $PSBoundParameters.GetEnumerator())
+        {
+            $parms.Add($par.Key,$par.Value)
+        }
+
+        $parms.Remove('constituent_id') | Out-Null
+
     }
 
     Process{
         # Get data for one or more IDs
-        $ID | ForEach-Object {
-            $res = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
-            $res.value
+        $constituent_id | ForEach-Object {
+            $res = Get-PagedApiResults $_ $endpoint $endUrl $api_subscription_key $myAuth $parms $limit
+            $res
         }
     }
     End{

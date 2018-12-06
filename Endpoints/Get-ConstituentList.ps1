@@ -1,97 +1,79 @@
-Function Update-Action
+Function Get-ConstituentList
 {
     [cmdletbinding()]
     param(
         [parameter(
-            #Position=0,
-            Mandatory=$true,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int[]]$ID,
+        ][string[]]$constituent_code,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$category,
+        ][int[]]$constituent_id,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][boolean]$completed,
+        ][string[]]$custom_field_category,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][datetime]$completed_date,
+        ][string[]]$fields,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][datetime]$date,
+        ][string[]]$fundraiser_status,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$description,
+        ][boolean]$include_deceased,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$direction,
+        ][boolean]$include_inactive,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$end_time,
+        ][string[]]$postal_code,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string[]]$fundraisers,
+        ][datetime]$date_added,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$location,
+        ][datetime]$last_modified,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$opportunity_id,
+        ][string]$sort_token,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$outcome,
+        ][string[]]$sort,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$priority,
+        ][int]$limit,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string]$start_time,
-        [parameter(
-            ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true
-            )
-        ][string]$status,
-        [parameter(
-            ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true
-            )
-        ][string]$summary,
-        [parameter(
-            ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true
-            )
-        ][string]$type
+        ][int]$offset
     )
     Begin{
-
         # Get necessary items from config file
         $config = Get-Content ".\Config.json" | ConvertFrom-Json
         $api_subscription_key = ($config | Select-Object -Property "api_subscription_key").api_subscription_key
@@ -101,29 +83,55 @@ Function Update-Action
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/actions/'
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents'
         $endUrl = ''
 
-        # Create JSON for supplied parameters
-        $parms = $PSBoundParameters
-        $parms.Remove('ID') | Out-Null
+        # Get the supplied parameters
 
-        # Reformat any supplied dateTime fields
-        $parms = Convert-SkyApiDateParm $parms 'completed_date'
-        $parms = Convert-SkyApiDateParm $parms 'date'
+        # Specify which params are treated differently by the API
+        $arrayParms = 'constituent_code','constituent_id','custom_field_category'
+        $listParms = 'fields','fundraiser_status','postal_code','sort'
 
-        # Convert the parameter hash table to a JSON
-        $parmsJson = $parms | ConvertTo-Json
+        # Define variable which can accept multiple instances of the same key and
+        # build a hash of the parameters
+        $Parameters = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
+        foreach ($par in $PSBoundParameters.GetEnumerator())
+        {
+            # If the parameter is an array type, it can be provided multiple
+            # times in the URL, so add each one as a new key/value pair
+            if ($par.Key -in $arrayParms)
+            {
+                foreach ($val in $($par.Value))
+                {
+                    $Parameters.Add($par.Key,$val)
+                }
+            }
+            # If the parameter is a list type, multiple values will be
+            # provided as a single string of comma separated values against
+            # a single instance of the key
+            elseif ($par.Key -in $listParms)
+            {
+                $listString = ''
+                foreach ($l in $($par.Value))
+                {
+                    $listString += $l + ','
+                }
+                # Remove final comma
+                $listString = $listString -replace ".$"
+                $Parameters.Add($par.Key,$listString)
+            }
+            # Otherwise add a new key value pair as normal
+            else
+            {
+                $Parameters.Add($par.Key,$par.Value)
+            }
+        }
     }
 
     Process{
-        # Update one or more IDs with the same data
-        $i = 0
-        $ID | ForEach-Object {
-            $i++
-            Write-Host "Patching Action ID $_ (record $i of $($ID.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
-        }
+            $res = Get-PagedApiResults '' $endpoint $endUrl $api_subscription_key $myAuth $Parameters $limit
     }
-    End{}
+    End{
+        $res
+    }
 }

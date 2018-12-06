@@ -27,15 +27,11 @@ Function Get-EducationListSingle
 
     Process{
         # Get data for one or more IDs
-        $outputArray = @()
-        $i = 0
         $ID | ForEach-Object {
-            $i++
             $res = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
-            $outputArray += $res.value
+            $res.value
         }
     }
     End{
-        $outputArray
     }
 }
