@@ -48,16 +48,20 @@ Function Get-ProfilePicture
                 Start-Process $res.url
             }
 
-            # Download the file
-            if (Test-Path $download_folder)
+            if ($download_folder -ne '')
             {
-                $trimStart = Split-Path $imgUrl -leaf
-                $outputFileName = ($trimStart).Substring(0,$trimStart.IndexOf("?",0))
-                $output_location = Join-Path -Path $download_folder -ChildPath $outputFileName
-                Invoke-WebRequest $res.url -OutFile $output_location
-            }
-            else {
-                write-host "Cannot download file to specified folder"
+                # Download the file
+                if (Test-Path $download_folder)
+                {
+                    $trimStart = Split-Path $imgUrl -leaf
+                    $outputFileName = ($trimStart).Substring(0,$trimStart.IndexOf("?",0))
+                    $output_location = Join-Path -Path $download_folder -ChildPath $outputFileName
+                    Invoke-WebRequest $res.url -OutFile $output_location
+                }
+                else 
+                {
+                    write-host "Cannot download file to specified folder"
+                }
             }
         }
     }
