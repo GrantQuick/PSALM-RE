@@ -62,6 +62,7 @@ Get-ConstituentFromLookup -search_text 100604 | Select id | Get-EmailListSingle
 | Get-EducationListSingle | Get Education list (Single constituent) |
 | Get-EmailListSingle | Get Email address list (Single constituent) |
 | Get-PhoneListSingle | Get Phone list (Single constituent) |
+| Get-ProfilePicture | Get Profile picture |
 | Update-Action | Patch Action |
 | Update-Address | Patch Address |
 | Update-Alias | Patch Alias |
