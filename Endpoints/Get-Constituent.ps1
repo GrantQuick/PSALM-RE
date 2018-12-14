@@ -3,12 +3,12 @@ Function Get-Constituent
     [cmdletbinding()]
     param(
         [parameter(
-            #Position=0,
+            Position=0,
             Mandatory=$true,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int[]]$ID
+        ][int[]]$constituent_id
     )
     Begin{
 
@@ -27,7 +27,7 @@ Function Get-Constituent
 
     Process{
         # Get data for one or more IDs
-        $ID | ForEach-Object {
+        $constituent_id | ForEach-Object {
             $res = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
             $res
         }

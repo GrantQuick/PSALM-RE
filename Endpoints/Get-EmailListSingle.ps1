@@ -8,7 +8,7 @@ Function Get-EmailListSingle
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int[]]$ID,
+        ][int[]]$constituent_id,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
@@ -32,7 +32,7 @@ Function Get-EmailListSingle
 
     Process{
         # Get data for one or more IDs
-        $ID | ForEach-Object {
+        $constituent_id | ForEach-Object {
             $res = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
             $res.value
         }

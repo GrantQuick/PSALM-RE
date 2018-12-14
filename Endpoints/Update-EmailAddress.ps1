@@ -3,12 +3,12 @@ Function Update-EmailAddress
     [cmdletbinding()]
     param(
         [parameter(
-            #Position=0,
+            Position=0,
             Mandatory=$true,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int[]]$ID,
+        ][int[]]$email_address_id,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
@@ -51,7 +51,7 @@ Function Update-EmailAddress
 
         # Create JSON for supplied parameters
         $parms = $PSBoundParameters
-        $parms.Remove('ID') | Out-Null
+        $parms.Remove('email_address_id') | Out-Null
 
         # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
@@ -60,9 +60,9 @@ Function Update-EmailAddress
     Process{
         # Update one or more IDs with the same data
         $i = 0
-        $ID | ForEach-Object {
+        $email_address_id | ForEach-Object {
             $i++
-            Write-Host "Patching Email ID $_ (record $i of $($ID.Length))"
+            Write-Host "Patching Email ID $_ (record $i of $($email_address_id.Length))"
             Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }

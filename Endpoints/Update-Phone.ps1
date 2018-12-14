@@ -3,12 +3,12 @@ Function Update-Phone
     [cmdletbinding()]
     param(
         [parameter(
-            #Position=0,
+            Position=0,
             Mandatory=$true,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int[]]$ID,
+        ][int[]]$phone_id,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
@@ -51,7 +51,7 @@ Function Update-Phone
 
         # Create JSON for supplied parameters
         $parms = $PSBoundParameters
-        $parms.Remove('ID') | Out-Null
+        $parms.Remove('phone_id') | Out-Null
 
         # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
@@ -60,9 +60,9 @@ Function Update-Phone
     Process{
         # Update one or more IDs with the same data
         $i = 0
-        $ID | ForEach-Object {
+        $phone_id | ForEach-Object {
             $i++
-            Write-Host "Patching Phone ID $_ (record $i of $($ID.Length))"
+            Write-Host "Patching Phone ID $_ (record $i of $($phone_id.Length))"
             Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }

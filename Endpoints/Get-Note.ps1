@@ -1,4 +1,4 @@
-Function Get-ConstituentCodeListSingle
+Function Get-Note
 {
     [cmdletbinding()]
     param(
@@ -8,7 +8,7 @@ Function Get-ConstituentCodeListSingle
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int[]]$constituent_id
+        ][int[]]$note_id
     )
     Begin{
 
@@ -21,15 +21,15 @@ Function Get-ConstituentCodeListSingle
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/'
-        $endUrl = '/constituentcodes'
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/notes/'
+        $endUrl = ''
     }
 
     Process{
         # Get data for one or more IDs
-        $constituent_id | ForEach-Object {
+        $note_id | ForEach-Object {
             $res = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
-            $res.value
+            $res
         }
     }
     End{

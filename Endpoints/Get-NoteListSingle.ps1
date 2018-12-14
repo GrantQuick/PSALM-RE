@@ -1,4 +1,4 @@
-Function Get-ConstituentCodeListSingle
+Function Get-NoteListSingle
 {
     [cmdletbinding()]
     param(
@@ -22,7 +22,7 @@ Function Get-ConstituentCodeListSingle
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
         $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/'
-        $endUrl = '/constituentcodes'
+        $endUrl = '/notes'
     }
 
     Process{

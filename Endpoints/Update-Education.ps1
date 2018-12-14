@@ -3,12 +3,12 @@ Function Update-Education
     [cmdletbinding()]
     param(
         [parameter(
-            #Position=0,
+            Position=0,
             Mandatory=$true,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int[]]$ID,
+        ][int[]]$education_id,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
@@ -156,7 +156,7 @@ Function Update-Education
 
         # Create JSON for supplied parameters
         $parms = $PSBoundParameters
-        $parms.Remove('ID') | Out-Null
+        $parms.Remove('education_id') | Out-Null
 
         # Refactor any fuzzy date fields
         $parms = Merge-SkyApiDateParm $parms 'date_entered'
@@ -165,14 +165,16 @@ Function Update-Education
 
         # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
+
+        $i = 0
+
     }
 
     Process{
         # Update one or more IDs with the same data
-        $i = 0
-        $ID | ForEach-Object {
+        $education_id | ForEach-Object {
             $i++
-            Write-Host "Patching Education ID $_ (record $i of $($ID.Length))"
+            Write-Host "Patching Education ID $_ (record $i of $($education_id.Length))"
             Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
