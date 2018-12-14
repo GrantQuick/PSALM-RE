@@ -61,6 +61,8 @@ Get-ConstituentFromLookup -search_text 100604 | Select-Object @{Name="constituen
 | Get-ConstituentList | Get Constituent list |
 | Get-EducationListSingle | Get Education list (Single constituent) |
 | Get-EmailListSingle | Get Email address list (Single constituent) |
+| Get-Note | Get Note |
+| Get-NoteListSingle | Get Note list (Single constituent) |
 | Get-PhoneListSingle | Get Phone list (Single constituent) |
 | Get-ProfilePicture | Get Profile picture |
 | Update-Action | Patch Action |
