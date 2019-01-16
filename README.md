@@ -57,14 +57,21 @@ Get-ConstituentFromLookup -search_text 100604 | Select-Object @{Name="constituen
 | Get-CommunicationPreferenceListSingle | Get Communication preference list (Single constituent) |
 | Get-Constituent | Get Constituent |
 | Get-ConstituentCodeListSingle | Get Constituent code list (Single constituent) |
+| Get-ConstituentConsentList | Constituent consent list |
 | Get-ConstituentFromLookup | Get Constituent (Search) |
 | Get-ConstituentList | Get Constituent list |
 | Get-EducationListSingle | Get Education list (Single constituent) |
 | Get-EmailListSingle | Get Email address list (Single constituent) |
 | Get-Note | Get Note |
 | Get-NoteListSingle | Get Note list (Single constituent) |
+| Get-OnlinePresenceListSingle | Online presence list (Single constituent) |
 | Get-PhoneListSingle | Get Phone list (Single constituent) |
 | Get-ProfilePicture | Get Profile picture |
+| Get-RelationshipListSingle | Relationship list (Single constituent) |
+| New-Alias | Post Alias |
+| New-Email | Post Email address |
+| New-OnlinePresence | Post Online presence |
+| New-Phone | Post Phone |
 | Update-Action | Patch Action |
 | Update-Address | Patch Address |
 | Update-Alias | Patch Alias |
