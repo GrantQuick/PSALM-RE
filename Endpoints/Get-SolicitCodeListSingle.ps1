@@ -30,7 +30,7 @@ Function Get-SolicitCodeListSingle
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/'
+        $endpoint = 'https://api.sky.blackbaud.com/commpref/v1/constituents/'
         $endUrl = '/constituentsolicitcodes'
 
         # Get the supplied parameters
