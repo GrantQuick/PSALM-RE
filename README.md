@@ -68,6 +68,7 @@ Get-ConstituentFromLookup -search_text 100604 | Select-Object @{Name="constituen
 | Get-PhoneListSingle | Get Phone list (Single constituent) |
 | Get-ProfilePicture | Get Profile picture |
 | Get-RelationshipListSingle | Relationship list (Single constituent) |
+| Get-SolicitCodeListSingle | Constituent solicit code list (Single constituent) |
 | New-Alias | Post Alias |
 | New-Email | Post Email address |
 | New-OnlinePresence | Post Online presence |
