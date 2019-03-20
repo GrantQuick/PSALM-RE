@@ -73,6 +73,7 @@ Get-ConstituentFromLookup -search_text 100604 | Select-Object @{Name="constituen
 | New-Email | Post Email address |
 | New-OnlinePresence | Post Online presence |
 | New-Phone | Post Phone |
+| Remove-Address | Delete Address |
 | Remove-Alias | Delete Alias |
 | Remove-ConstituentConsent | Delete Constituent consent |
 | Update-Action | Patch Action |

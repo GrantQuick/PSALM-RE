@@ -1,4 +1,4 @@
-Function Remove-Alias
+Function Remove-Address
 {
     [cmdletbinding()]
     param(
@@ -8,7 +8,7 @@ Function Remove-Alias
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string[]]$alias_id
+        ][string[]]$address_id
     )
     Begin{
 
@@ -21,20 +21,20 @@ Function Remove-Alias
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/aliases/'
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/addresses/'
         $endUrl = ''
         
     }
 
     Process{
-        # Remove Entity
+        # Remove entity
         $i = 0
-        $alias_id | ForEach-Object {
+        $address_id | ForEach-Object {
             $i++
-            Write-Host "Deleting Alias ID $_ (record $i of $($alias_id.Length))"
-            Write-Host $alias_id
+            Write-Host "Deleting Address ID $_ (record $i of $($address_id.Length))"
+            Write-Host $address_id
             Remove-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
-            Write-Host "Deleted Alias ID $_ "
+            Write-Host "Deleted Address ID $_ "
         }
     }
     End{}
