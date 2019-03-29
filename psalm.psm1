@@ -142,6 +142,22 @@ Function Update-SkyApiEntity
     $apiCallResult
 }
 
+Function New-SkyApiEntity
+{
+    [CmdletBinding()]
+    param($url, $addProperties, $api_key, $authorisation)
+
+    $apiCallResult =
+    Invoke-RestMethod   -Method Post `
+                        -ContentType application/json `
+                        -Headers @{
+                                'Authorization' = ("Bearer "+ $($authorisation.access_token))
+                                'bb-api-subscription-key' = ($api_key)} `
+                        -Uri $url `
+                        -Body $addProperties
+    $apiCallResult
+}
+
 Function Get-SkyApiEntity
 {
     [CmdletBinding()]
@@ -158,6 +174,8 @@ Function Get-SkyApiEntity
                         -Uri $fullUri
     $apiCallResult
 }
+
+
 
 Function Remove-SkyApiEntity
 {
