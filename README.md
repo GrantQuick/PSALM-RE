@@ -76,6 +76,7 @@ Get-ConstituentFromLookup -search_text 100604 | Select-Object @{Name="constituen
 | Remove-Address | Delete Address |
 | Remove-Alias | Delete Alias |
 | Remove-ConstituentConsent | Delete Constituent consent |
+| Remove-Education | Delete Education |
 | Update-Action | Patch Action |
 | Update-Address | Patch Address |
 | Update-Alias | Patch Alias |
