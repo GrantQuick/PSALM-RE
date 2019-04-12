@@ -51,24 +51,39 @@ Get-ConstituentFromLookup -search_text 100604 | Select-Object @{Name="constituen
 | PS Cmdlet | Endpoint Implemented |
 | --- | --- |
 | Get-Action | Get Action |
+| Get-ActionCustomFieldCategoryDetails | Get Action custom field category details |
 | Get-ActionListSingle | Get Action list (Single constituent) |
 | Get-AddressListSingle | Get Address list (Single constituent) |
+| Get-AddressTypes | Get Address types |
 | Get-AliasListSingle | Get Alias list (Single constituent) |
+| Get-AliasTypes | Get Alias types |
+| Get-ActionLocations | Get Action locations |
+| Get-AttachmentTags | Get Attachment tags |
 | Get-CommunicationPreferenceListSingle | Get Communication preference list (Single constituent) |
 | Get-Constituent | Get Constituent |
 | Get-ConstituentCodeListSingle | Get Constituent code list (Single constituent) |
-| Get-ConstituentConsentList | Constituent consent list |
+| Get-ConstituentCodeTypes | Get Constituent code types |
+| Get-ConstituentConsentList | Get Constituent consent list |
 | Get-ConstituentFromLookup | Get Constituent (Search) |
 | Get-ConstituentList | Get Constituent list |
+| Get-EducationDegreeClasses | Get Education degree classes |
+| Get-EducationDepartments | Get Education departments |
+| Get-EducationFaculties | Get Education faculties |
 | Get-EducationListSingle | Get Education list (Single constituent) |
+| Get-EducationSchools | Get Education schools |
+| Get-EducationStatuses | Get Education statuses |
+| Get-EducationSubjects | Get Education subjects |
+| Get-EducationTypes | Get Education types |
+| Get-EmailAddressTypes | Get Email address types |
 | Get-EmailListSingle | Get Email address list (Single constituent) |
 | Get-Note | Get Note |
 | Get-NoteListSingle | Get Note list (Single constituent) |
-| Get-OnlinePresenceListSingle | Online presence list (Single constituent) |
+| Get-OnlinePresenceListSingle | Get Online presence list (Single constituent) |
 | Get-PhoneListSingle | Get Phone list (Single constituent) |
+| Get-PhoneTypes | Get Phone types |
 | Get-ProfilePicture | Get Profile picture |
-| Get-RelationshipListSingle | Relationship list (Single constituent) |
-| Get-SolicitCodeListSingle | Constituent solicit code list (Single constituent) |
+| Get-RelationshipListSingle | Get Relationship list (Single constituent) |
+| Get-SolicitCodeListSingle | Get Constituent solicit code list (Single constituent) |
 | New-Alias | Post Alias |
 | New-Email | Post Email address |
 | New-OnlinePresence | Post Online presence |
@@ -77,6 +92,7 @@ Get-ConstituentFromLookup -search_text 100604 | Select-Object @{Name="constituen
 | Remove-Alias | Delete Alias |
 | Remove-ConstituentConsent | Delete Constituent consent |
 | Remove-Education | Delete Education |
+| Remove-EmailAddress | Delete Email address |
 | Update-Action | Patch Action |
 | Update-Address | Patch Address |
 | Update-Alias | Patch Alias |
