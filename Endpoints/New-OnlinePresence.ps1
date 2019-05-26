@@ -60,7 +60,7 @@ Function New-OnlinePresence
             # Convert the parameter hash table to a JSON
             $parmsJson = $parms | ConvertTo-Json
             # $parmsJson
-            $created_id = Set-SkyApiEntity $endpoint $parmsJson $api_subscription_key $myAuth
+            $created_id = New-SkyApiEntity $endpoint $parmsJson $api_subscription_key $myAuth
             write-host "Created online presence ID $($created_id.id)"
         }
     }
