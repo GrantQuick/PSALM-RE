@@ -14,7 +14,7 @@ Follow the instructions at https://apidocs.sky.blackbaud.com/docs/createapp/ to 
 
 ### Configuring PSALM
 1. Clone/Download the repo
-2. Edit the Config.json file and complete each field, eg:
+2. Edit the config.json file and complete each field, eg:
 ```json
 {
   "key_dir":  "C:\\Users\\your_username\\Scripts\\SkyApi\\Key.json",
@@ -28,15 +28,15 @@ Follow the instructions at https://apidocs.sky.blackbaud.com/docs/createapp/ to 
 1. In a PowerShell window, navigate to the psalm folder
 2. Import the module
 ```PowerShell
-Import-Module .\psalm.psm1
+Import-Module .\psalm-re.psm1
 ```
 3. To connect to the API, in a PowerShell window, run 
 ```PowerShell
-Connect-SkyApi
+Connect-RENXT
 ```
 4. On first run, this cmdlet will prompt for your credentials and ask you to authorise PSALM for use with your data, and will download a key file with the authentication codes for later use. On subsequent runnings, the cmdlet will either refresh the authentication codes, or ask you to re-authorise if they have expired. You can force PSALM to aquire new keys by running:
 ```PowerShell
-Connect-SkyApi -Force
+Connect-RENXT -Force
 ```
 5. You can now run any of the cmdlets, eg in order to update the Department and Campus for two education records, you can either pipe a group of IDs to the cmdlet or use:
 ```PowerShell

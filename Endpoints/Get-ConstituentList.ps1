@@ -131,7 +131,7 @@ Function Get-ConstituentList
         if ($null -ne $limit -and $limit -ne '') {$limit_supplied = $true}
 
         # Otherwise, grab them all
-        if ($null -eq $limit -or $limit -eq '') {$limit = 500}
+        if ($null -eq $limit -or $limit -eq '') {$limit = 5000}
         if ($null -eq $offset -or $offset -eq '') {$offset = 0}
 
         $parms.Remove('limit') | Out-Null
