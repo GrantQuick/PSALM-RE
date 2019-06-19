@@ -33,7 +33,7 @@ Function Remove-Address
             $i++
             Write-Host "Deleting Address ID $_ (record $i of $($address_id.Length))"
             Write-Host $address_id
-            Remove-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Remove-SkyApiEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
             Write-Host "Deleted Address ID $_ "
         }
     }

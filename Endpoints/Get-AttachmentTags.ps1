@@ -20,7 +20,7 @@ Function Get-AttachmentTags
 
     Process{
         # Get data
-        $data = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
+        $data = Get-UnpagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $null
         # Convert array to object list
         $obj_list = $data.value | Select-Object @{Name='attachment_tag';Expression={$_}}
               

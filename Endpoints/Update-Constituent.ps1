@@ -139,8 +139,8 @@ Function Update-Constituent
         $parms.Remove('constituent_id') | Out-Null
 
         # Refactor any fuzzy date fields
-        $parms = Merge-SkyApiDateParm $parms 'birthdate'
-        $parms = Merge-SkyApiDateParm $parms 'deceased_date'
+        $parms = Merge-SkyApiDateParmRENXT $parms 'birthdate'
+        $parms = Merge-SkyApiDateParmRENXT $parms 'deceased_date'
 
         # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
@@ -152,7 +152,7 @@ Function Update-Constituent
         $constituent_id | ForEach-Object {
             $i++
             Write-Host "Patching Constituent ID $_ (record $i of $($constituent_id.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Update-SkyApiEntityRENXT $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

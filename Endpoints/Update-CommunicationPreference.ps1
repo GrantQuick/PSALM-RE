@@ -44,8 +44,8 @@ Function Update-CommunicationPreference
         $parms.Remove('communication_preference_id') | Out-Null
 
         # Reformat any supplied dateTime fields
-        $parms = Convert-SkyApiDateParm $parms 'end'
-        $parms = Convert-SkyApiDateParm $parms 'start'
+        $parms = Convert-SkyApiDateParmRENXT $parms 'end'
+        $parms = Convert-SkyApiDateParmRENXT $parms 'start'
 
         # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
@@ -57,7 +57,7 @@ Function Update-CommunicationPreference
         $communication_preference_id | ForEach-Object {
             $i++
             Write-Host "Patching Communication Preference ID $_ (record $i of $($communication_preference_id.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Update-SkyApiEntityRENXT $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

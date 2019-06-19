@@ -119,12 +119,12 @@ Function Update-Address
         $parms.Remove('address_id') | Out-Null
 
         # Refactor any fuzzy date fields
-        $parms = Merge-SkyApiDateParm $parms 'seasonal_end'
-        $parms = Merge-SkyApiDateParm $parms 'seasonal_start'
+        $parms = Merge-SkyApiDateParmRENXT $parms 'seasonal_end'
+        $parms = Merge-SkyApiDateParmRENXT $parms 'seasonal_start'
         
         # Reformat any supplied dateTime fields
-        $parms = Convert-SkyApiDateParm $parms 'end'
-        $parms = Convert-SkyApiDateParm $parms 'start'
+        $parms = Convert-SkyApiDateParmRENXT $parms 'end'
+        $parms = Convert-SkyApiDateParmRENXT $parms 'start'
 
         # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
@@ -137,7 +137,7 @@ Function Update-Address
         $address_id | ForEach-Object {
             $i++
             Write-Host "Patching Address ID $_ (record $i of $($address_id.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Update-SkyApiEntityRENXT $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

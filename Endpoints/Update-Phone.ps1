@@ -63,7 +63,7 @@ Function Update-Phone
         $phone_id | ForEach-Object {
             $i++
             Write-Host "Patching Phone ID $_ (record $i of $($phone_id.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Update-SkyApiEntityRENXT $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

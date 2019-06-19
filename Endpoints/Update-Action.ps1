@@ -109,8 +109,8 @@ Function Update-Action
         $parms.Remove('action_id') | Out-Null
 
         # Reformat any supplied dateTime fields
-        $parms = Convert-SkyApiDateParm $parms 'completed_date'
-        $parms = Convert-SkyApiDateParm $parms 'date'
+        $parms = Convert-SkyApiDateParmRENXT $parms 'completed_date'
+        $parms = Convert-SkyApiDateParmRENXT $parms 'date'
 
         # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
@@ -122,7 +122,7 @@ Function Update-Action
         $action_id | ForEach-Object {
             $i++
             Write-Host "Patching Action ID $_ (record $i of $($action_id.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Update-SkyApiEntityRENXT $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

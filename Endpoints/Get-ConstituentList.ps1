@@ -94,7 +94,7 @@ Function Get-ConstituentList
 
         # Define variable which can accept multiple instances of the same key and
         # build a hash of the parameters
-        $Parameters = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
+        $parms = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
         foreach ($par in $PSBoundParameters.GetEnumerator())
         {
             # If the parameter is an array type, it can be provided multiple
@@ -103,7 +103,7 @@ Function Get-ConstituentList
             {
                 foreach ($val in $($par.Value))
                 {
-                    $Parameters.Add($par.Key,$val)
+                    $parms.Add($par.Key,$val)
                 }
             }
             # If the parameter is a list type, multiple values will be
@@ -118,18 +118,31 @@ Function Get-ConstituentList
                 }
                 # Remove final comma
                 $listString = $listString -replace ".$"
-                $Parameters.Add($par.Key,$listString)
+                $parms.Add($par.Key,$listString)
             }
             # Otherwise add a new key value pair as normal
             else
             {
-                $Parameters.Add($par.Key,$par.Value)
+                $parms.Add($par.Key,$par.Value)
             }
         }
+
+        # If the user supplied a limit, then respect it and don't get subsequent pages
+        if ($null -ne $limit -and $limit -ne '') {$limit_supplied = $true}
+
+        # Otherwise, grab them all
+        if ($null -eq $limit -or $limit -eq '') {$limit = 500}
+        if ($null -eq $offset -or $offset -eq '') {$offset = 0}
+
+        $parms.Remove('limit') | Out-Null
+        $parms.Remove('offset') | Out-Null
+
+        $parms.Add('limit',$limit)
+        $parms.Add('offset',$offset)
     }
 
     Process{
-            $res = Get-PagedApiResults '' $endpoint $endUrl $api_subscription_key $myAuth $Parameters $limit
+            $res = Get-PagedEntityRENXT '' $endpoint $endUrl $api_subscription_key $myAuth $parms $limit_supplied
     }
     End{
         $res

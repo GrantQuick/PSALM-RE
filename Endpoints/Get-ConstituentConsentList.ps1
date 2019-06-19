@@ -53,7 +53,7 @@ Function Get-ConstituentConsentList
 
         # Define variable which can accept multiple instances of the same key and
         # build a hash of the parameters
-        $Parameters = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
+        $parms = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
         foreach ($par in $PSBoundParameters.GetEnumerator())
         {
             # If the parameter is an array type, it can be provided multiple
@@ -62,24 +62,37 @@ Function Get-ConstituentConsentList
             {
                 foreach ($val in $($par.Value))
                 {
-                    $Parameters.Add($par.Key,$val)
+                    $parms.Add($par.Key,$val)
                 }
             }
             # Otherwise add a new key value pair as normal
             else
             {
-                $Parameters.Add($par.Key,$par.Value)
+                $parms.Add($par.Key,$par.Value)
             }
         }
 
-        $Parameters.Remove('constituent_id')        
+        $parms.Remove('constituent_id')  
+        
+        # If the user supplied a limit, then respect it and don't get subsequent pages
+        if ($null -ne $limit -and $limit -ne '') {$limit_supplied = $true}
+
+        # Otherwise, grab them all
+        if ($null -eq $limit -or $limit -eq '') {$limit = 500}
+        if ($null -eq $offset -or $offset -eq '') {$offset = 0}
+
+        $parms.Remove('limit') | Out-Null
+        $parms.Remove('offset') | Out-Null
+
+        $parms.Add('limit',$limit)
+        $parms.Add('offset',$offset)
 
     }
 
     Process{
         # Get data for one or more IDs
         $constituent_id | ForEach-Object {
-            $res = Get-PagedApiResults $_ $endpoint $endUrl $api_subscription_key $myAuth $Parameters $limit
+            $res = Get-PagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $parms $limit_supplied
             $res | Add-Member -NotePropertyName constituent_id -NotePropertyValue $_
             $res
         }

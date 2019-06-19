@@ -33,7 +33,7 @@ Function Remove-EmailAddress
             $i++
             Write-Host "Deleting Email ID $_ (record $i of $($email_address_id.Length))"
             Write-Host $email_address_id
-            Remove-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Remove-SkyApiEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
             Write-Host "Deleted Email ID $_ "
         }
     }

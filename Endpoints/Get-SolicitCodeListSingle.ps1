@@ -43,12 +43,25 @@ Function Get-SolicitCodeListSingle
 
         $parms.Remove('constituent_id') | Out-Null
 
+        # If the user supplied a limit, then respect it and don't get subsequent pages
+        if ($null -ne $limit -and $limit -ne '') {$limit_supplied = $true}
+
+        # Otherwise, grab them all
+        if ($null -eq $limit -or $limit -eq '') {$limit = 500}
+        if ($null -eq $offset -or $offset -eq '') {$offset = 0}
+
+        $parms.Remove('limit') | Out-Null
+        $parms.Remove('offset') | Out-Null
+
+        $parms.Add('limit',$limit)
+        $parms.Add('offset',$offset)
+
     }
 
     Process{
         # Get data for one or more IDs
         $constituent_id | ForEach-Object {
-            $res = Get-PagedApiResults $_ $endpoint $endUrl $api_subscription_key $myAuth $parms $limit
+            $res = Get-PagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $parms $limit_supplied
             $res
         }
     }

@@ -1,4 +1,4 @@
-Function Remove-Education
+Function Get-ActionAttachmentListSingle
 {
     [cmdletbinding()]
     param(
@@ -8,7 +8,7 @@ Function Remove-Education
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string[]]$education_id
+        ][int[]]$action_id
     )
     Begin{
 
@@ -21,21 +21,17 @@ Function Remove-Education
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/educations/'
-        $endUrl = ''
-        
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/actions/'
+        $endUrl = '/attachments'
     }
 
     Process{
-        # Remove entity
-        $i = 0
-        $education_id | ForEach-Object {
-            $i++
-            Write-Host "Deleting Education ID $_ (record $i of $($education_id.Length))"
-            Write-Host $education_id
-            Remove-SkyApiEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
-            Write-Host "Deleted Education ID $_ "
+        # Get data for one or more IDs
+        $action_id | ForEach-Object {
+            $res = Get-UnpagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $null
+            $res.value
         }
     }
-    End{}
+    End{
+    }
 }

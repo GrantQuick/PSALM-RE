@@ -33,7 +33,7 @@ Function Remove-Alias
             $i++
             Write-Host "Deleting Alias ID $_ (record $i of $($alias_id.Length))"
             Write-Host $alias_id
-            Remove-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Remove-SkyApiEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
             Write-Host "Deleted Alias ID $_ "
         }
     }

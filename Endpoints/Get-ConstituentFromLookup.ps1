@@ -34,7 +34,7 @@ Function Get-ConstituentFromLookup
     Process{
         # Get data for one or more IDs
         $search_text | ForEach-Object {
-            $res = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
+            $res = Get-UnpagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $null
             $res.value
         }
     }

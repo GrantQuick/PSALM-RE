@@ -49,7 +49,7 @@ Function New-Alias
             # Convert the parameter hash table to a JSON
             $parmsJson = $parms | ConvertTo-Json
             # $parmsJson
-            $created_id = New-SkyApiEntity $endpoint $parmsJson $api_subscription_key $myAuth
+            $created_id = New-SkyApiEntityRENXT $endpoint $parmsJson $api_subscription_key $myAuth
             write-host "Created alias ID $($created_id.id)"
         }
     }

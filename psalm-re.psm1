@@ -1,6 +1,6 @@
 ﻿$token_uri = "https://oauth2.sky.blackbaud.com/token"
 
-Function Get-SkyApiAuthToken
+Function Get-SkyApiAuthTokenRENXT
 {
     [CmdletBinding()]
     param($grant_type,$client_id,$redirect_uri,$client_secret,$authCode)
@@ -22,7 +22,7 @@ Function Get-SkyApiAuthToken
     $Authorization
 }
 
-Function Get-RefreshToken
+Function Get-RefreshTokenRENXT
 {
     [CmdletBinding()]
     param($grant_type,$client_id,$redirect_uri,$client_secret,$authCode)
@@ -44,7 +44,7 @@ Function Get-RefreshToken
     $Authorization
 }
 
-Function Show-OAuthWindow
+Function Show-OAuthWindowRENXT
 {
     param(
         [System.Uri]$Url
@@ -73,7 +73,7 @@ Function Show-OAuthWindow
     $output
 }
 
-Function Merge-SkyApiDateParm
+Function Merge-SkyApiDateParmRENXT
 {
     # Refactor the fuzzy date fields
     [CmdletBinding()]
@@ -110,7 +110,7 @@ Function Merge-SkyApiDateParm
     $sourceHash
 }
 
-Function Convert-SkyApiDateParm
+Function Convert-SkyApiDateParmRENXT
 {
     # Refactor the fuzzy date fields
     [CmdletBinding()]
@@ -124,7 +124,7 @@ Function Convert-SkyApiDateParm
     $sourceHash
 }
 
-Function Update-SkyApiEntity
+Function Update-SkyApiEntityRENXT
 {
     [CmdletBinding()]
     param($uid, $updateProperties, $url, $endUrl, $api_key, $authorisation)
@@ -142,7 +142,7 @@ Function Update-SkyApiEntity
     $apiCallResult
 }
 
-Function New-SkyApiEntity
+Function New-SkyApiEntityRENXT
 {
     [CmdletBinding()]
     param($url, $addProperties, $api_key, $authorisation)
@@ -158,26 +158,7 @@ Function New-SkyApiEntity
     $apiCallResult
 }
 
-Function Get-SkyApiEntity
-{
-    [CmdletBinding()]
-    param($uid, $url, $endUrl, $api_key, $authorisation)
-
-    $fullUri = $url + $uid + $endUrl
-
-    $apiCallResult =
-    Invoke-RestMethod   -Method Get `
-                        -ContentType application/json `
-                        -Headers @{
-                                'Authorization' = ("Bearer "+ $($authorisation.access_token))
-                                'bb-api-subscription-key' = ($api_key)} `
-                        -Uri $fullUri
-    $apiCallResult
-}
-
-
-
-Function Remove-SkyApiEntity
+Function Remove-SkyApiEntityRENXT
 {
     [CmdletBinding()]
     param($uid, $url, $endUrl, $api_key, $authorisation)
@@ -194,10 +175,49 @@ Function Remove-SkyApiEntity
     $apiCallResult
 }
 
-Function Get-PagedApiResults
+# Function Get-UnpagedEntityRENXT
+# {
+#     [CmdletBinding()]
+#     param($uid, $url, $endUrl, $api_key, $authorisation)
+
+#     $fullUri = $url + $uid + $endUrl
+
+#     $apiCallResult =
+#     Invoke-RestMethod   -Method Get `
+#                         -ContentType application/json `
+#                         -Headers @{
+#                                 'Authorization' = ("Bearer "+ $($authorisation.access_token))
+#                                 'bb-api-subscription-key' = ($api_key)} `
+#                         -Uri $fullUri
+#     $apiCallResult
+# }
+
+Function Get-UnpagedEntityRENXT
 {
     [CmdletBinding()]
-    param($uid, $url, $endUrl, $api_key, $authorisation, $params, $limit)
+    param($uid, $url, $endUrl, $api_key, $authorisation, $params)
+
+    $fullUri = $url + $uid + $endUrl
+    $Request = [System.UriBuilder]$fullUri
+    
+    if ($null -ne $params -and $params -ne '') {
+        $Request.Query = $params.ToString()
+    }
+    
+    $apiCallResult =
+    Invoke-RestMethod   -Method Get `
+                        -ContentType application/json `
+                        -Headers @{
+                                'Authorization' = ("Bearer "+ $($authorisation.access_token))
+                                'bb-api-subscription-key' = ($api_key)} `
+                        -Uri $($Request.Uri.AbsoluteUri)
+    $apiCallResult
+}
+
+Function Get-PagedEntityRENXT
+{
+    [CmdletBinding()]
+    param($uid, $url, $endUrl, $api_key, $authorisation, $params, $limit_supplied)
 
     $fullUri = $url + $uid + $endUrl
     $Request = [System.UriBuilder]$fullUri
@@ -215,11 +235,13 @@ Function Get-PagedApiResults
                                     'bb-api-subscription-key' = ($api_key)} `
                             -Uri $($Request.Uri.AbsoluteUri)
         $allRecords += $apiItems.value
+        $recordCount = $apiItems.count
+        [int]$params['offset'] += [int]$params['limit']
+        $Request.Query = $params.ToString()
 
-        # write-host $($Request.Uri.AbsoluteUri)
-
-        if ($allRecords.Count -ge $limit) {return $allRecords}
-    } while ([bool]($apiItems.PSobject.Properties.name -match "next_link"))
+        # If the user supplied a limit, then respect it and don't get subsequent pages
+        if ($true -eq $limit_supplied) {return $allRecords}
+    } while ([int]$recordCount -gt [int]$params['offset'])
 
     $allRecords
 }

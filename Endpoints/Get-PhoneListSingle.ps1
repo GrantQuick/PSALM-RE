@@ -33,7 +33,7 @@ Function Get-PhoneListSingle
     Process{
         # Get data for one or more IDs
         $constituent_id | ForEach-Object {
-            $res = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
+            $res = Get-UnpagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $null
             $res.value
         }
     }

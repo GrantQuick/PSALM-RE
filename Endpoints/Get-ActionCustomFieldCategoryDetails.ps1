@@ -18,7 +18,7 @@ Function Get-ActionCustomFieldCategoryDetails
 
     Process{
         # Get data
-        $data = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
+        $data = Get-UnpagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $null
         $data.value
               
     }

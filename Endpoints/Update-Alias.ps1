@@ -48,7 +48,7 @@ Function Update-Alias
         $alias_id | ForEach-Object {
             $i++
             Write-Host "Patching Alias ID $_ (record $i of $($alias_id.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Update-SkyApiEntityRENXT $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

@@ -33,7 +33,7 @@ Function Remove-ConstituentConsent
             $i++
             Write-Host "Deleting Consent ID $_ (record $i of $($consent_id.Length))"
             Write-Host $consent_id
-            Remove-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Remove-SkyApiEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
             Write-Host "Deleted Consent ID $_ "
         }
     }

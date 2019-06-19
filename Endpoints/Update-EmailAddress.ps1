@@ -63,7 +63,7 @@ Function Update-EmailAddress
         $email_address_id | ForEach-Object {
             $i++
             Write-Host "Patching Email ID $_ (record $i of $($email_address_id.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Update-SkyApiEntityRENXT $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

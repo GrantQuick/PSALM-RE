@@ -20,7 +20,7 @@ Function Get-EmailAddressTypes
 
     Process{
         # Get data
-        $data = Get-SkyApiEntity $_ $endpoint $endUrl $api_subscription_key $myAuth
+        $data = Get-UnpagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $null
         # Convert array to object list
         $obj_list = $data.value | Select-Object @{Name='email_address_type';Expression={$_}}
               

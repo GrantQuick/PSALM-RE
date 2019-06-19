@@ -159,9 +159,9 @@ Function Update-Education
         $parms.Remove('education_id') | Out-Null
 
         # Refactor any fuzzy date fields
-        $parms = Merge-SkyApiDateParm $parms 'date_entered'
-        $parms = Merge-SkyApiDateParm $parms 'date_graduated'
-        $parms = Merge-SkyApiDateParm $parms 'date_left'
+        $parms = Merge-SkyApiDateParmRENXT $parms 'date_entered'
+        $parms = Merge-SkyApiDateParmRENXT $parms 'date_graduated'
+        $parms = Merge-SkyApiDateParmRENXT $parms 'date_left'
 
         # Convert the parameter hash table to a JSON
         $parmsJson = $parms | ConvertTo-Json
@@ -175,7 +175,7 @@ Function Update-Education
         $education_id | ForEach-Object {
             $i++
             Write-Host "Patching Education ID $_ (record $i of $($education_id.Length))"
-            Update-SkyApiEntity $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
+            Update-SkyApiEntityRENXT $_ $parmsJson $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
         }
     }
     End{}

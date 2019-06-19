@@ -1,4 +1,4 @@
-Function Remove-Education
+Function Get-ActionCustomFieldCategoryValues
 {
     [cmdletbinding()]
     param(
@@ -8,7 +8,7 @@ Function Remove-Education
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string[]]$education_id
+        ][string[]]$category_name
     )
     Begin{
 
@@ -21,21 +21,27 @@ Function Remove-Education
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/educations/'
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/actions/customfields/categories/values'
         $endUrl = ''
         
+        # Get the supplied parameters
+        $parms = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
+
+        foreach ($par in $PSBoundParameters.GetEnumerator())
+        {
+            $parms.Add($par.Key,$par.Value)
+        }
+        
+
     }
 
     Process{
-        # Remove entity
-        $i = 0
-        $education_id | ForEach-Object {
-            $i++
-            Write-Host "Deleting Education ID $_ (record $i of $($education_id.Length))"
-            Write-Host $education_id
-            Remove-SkyApiEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
-            Write-Host "Deleted Education ID $_ "
+        # Get data for one or more IDs 
+        $category_name | ForEach-Object {
+            $res = Get-UnpagedEntityRENXT '' $endpoint $endUrl $api_subscription_key $myAuth $parms
+            $res.value
         }
     }
-    End{}
+    End{
+    }
 }
