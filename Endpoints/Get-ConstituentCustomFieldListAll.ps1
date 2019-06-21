@@ -1,14 +1,32 @@
-Function Get-SolicitCodeListSingle
+Function Get-ConstituentCustomFieldListAll
 {
     [cmdletbinding()]
     param(
         [parameter(
-            Position=0,
-            Mandatory=$true,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int[]]$constituent_id,
+        ][datetime]$date_added,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][datetime]$last_modified,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][string]$sort_token,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][string]$category,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][string]$value,
         [parameter(
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
@@ -18,7 +36,7 @@ Function Get-SolicitCodeListSingle
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][int]$skip
+        ][int]$offset
     )
     Begin{
         # Get necessary items from config file
@@ -30,8 +48,8 @@ Function Get-SolicitCodeListSingle
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/commpref/v1/constituents/'
-        $endUrl = '/constituentsolicitcodes'
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/customfields'
+        $endUrl = ''
 
         # Get the supplied parameters
         $parms = [System.Web.HttpUtility]::ParseQueryString([String]::Empty)
@@ -41,13 +59,11 @@ Function Get-SolicitCodeListSingle
             $parms.Add($par.Key,$par.Value)
         }
 
-        $parms.Remove('constituent_id') | Out-Null
-
         # If the user supplied a limit, then respect it and don't get subsequent pages
         if ($null -ne $limit -and $limit -ne '') {$limit_supplied = $true}
 
         # Otherwise, grab them all
-        if ($null -eq $limit -or $limit -eq '') {$limit = 500}
+        if ($null -eq $limit -or $limit -eq '') {$limit = 5000}
         if ($null -eq $offset -or $offset -eq '') {$offset = 0}
 
         $parms.Remove('limit') | Out-Null
@@ -55,16 +71,12 @@ Function Get-SolicitCodeListSingle
 
         $parms.Add('limit',$limit)
         $parms.Add('offset',$offset)
-
     }
 
     Process{
-        # Get data for one or more IDs
-        $constituent_id | ForEach-Object {
-            $res = Get-PagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $parms $limit_supplied
-            $res
-        }
+            $res = Get-PagedEntityRENXT '' $endpoint $endUrl $api_subscription_key $myAuth $parms $limit_supplied
     }
     End{
+        $res
     }
 }

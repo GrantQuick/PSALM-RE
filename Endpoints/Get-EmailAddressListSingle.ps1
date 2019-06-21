@@ -1,14 +1,19 @@
-Function Remove-Alias
+Function Get-EmailAddressListSingle
 {
     [cmdletbinding()]
     param(
         [parameter(
-            Position=0,
+            #Position=0,
             Mandatory=$true,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true
             )
-        ][string[]]$alias_id
+        ][int[]]$constituent_id,
+        [parameter(
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true
+            )
+        ][boolean]$include_inactive = 0
     )
     Begin{
 
@@ -21,21 +26,17 @@ Function Remove-Alias
         $getSecureString = Get-Content $key_dir | ConvertTo-SecureString
         $myAuth = ((New-Object PSCredential "user",$getSecureString).GetNetworkCredential().Password) | ConvertFrom-Json
 
-        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/aliases/'
-        $endUrl = ''
-        
+        $endpoint = 'https://api.sky.blackbaud.com/constituent/v1/constituents/'
+        $endUrl = '/emailaddresses?include_inactive=' + $include_inactive
     }
 
     Process{
-        # Remove Entity
-        $i = 0
-        $alias_id | ForEach-Object {
-            $i++
-            Write-Host "Deleting Alias ID $_ (record $i of $($alias_id.Length))"
-            Write-Host $alias_id
-            Remove-SkyApiEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth | Out-Null
-            Write-Host "Deleted Alias ID $_ "
+        # Get data for one or more IDs
+        $constituent_id | ForEach-Object {
+            $res = Get-UnpagedEntityRENXT $_ $endpoint $endUrl $api_subscription_key $myAuth $null
+            $res.value
         }
     }
-    End{}
+    End{
+    }
 }

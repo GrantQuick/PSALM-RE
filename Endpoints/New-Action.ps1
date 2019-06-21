@@ -95,7 +95,7 @@ Function New-Action
     Begin{
 
         # Get necessary items from config file
-        $config = Get-Content ".\Config.json" | ConvertFrom-Json
+        $config = Get-Content ".\config.json" | ConvertFrom-Json
         $api_subscription_key = ($config | Select-Object -Property "api_subscription_key").api_subscription_key
         $key_dir = ($config | Select-Object -Property "key_dir").key_dir
 

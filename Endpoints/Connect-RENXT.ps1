@@ -6,7 +6,7 @@ Function Connect-RENXT {
     $authorize_uri = "https://oauth2.sky.blackbaud.com/authorization"
     $redirect_uri = "http://localhost/5000"
 
-    $config = Get-Content ".\Config.json" | ConvertFrom-Json
+    $config = Get-Content ".\config.json" | ConvertFrom-Json
     $key_dir = ($config | Select-Object -Property "key_dir").key_dir
     $client_id = ($config | Select-Object -Property "client_id").client_id
     $client_secret = ($config | Select-Object -Property "client_secret").client_secret
