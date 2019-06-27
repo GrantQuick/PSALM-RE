@@ -175,23 +175,6 @@ Function Remove-SkyApiEntityRENXT
     $apiCallResult
 }
 
-# Function Get-UnpagedEntityRENXT
-# {
-#     [CmdletBinding()]
-#     param($uid, $url, $endUrl, $api_key, $authorisation)
-
-#     $fullUri = $url + $uid + $endUrl
-
-#     $apiCallResult =
-#     Invoke-RestMethod   -Method Get `
-#                         -ContentType application/json `
-#                         -Headers @{
-#                                 'Authorization' = ("Bearer "+ $($authorisation.access_token))
-#                                 'bb-api-subscription-key' = ($api_key)} `
-#                         -Uri $fullUri
-#     $apiCallResult
-# }
-
 Function Get-UnpagedEntityRENXT
 {
     [CmdletBinding()]
