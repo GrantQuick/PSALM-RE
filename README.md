@@ -1,3 +1,6 @@
+## UPDATE 2019-10-14
+Due to a job change, this repository is no longer in active development.
+
 ## PowerShell Sky API Library Module
 A set of PowerShell cmdlets for interacting with the Blackbaud Sky API. Currently in early development.
 
